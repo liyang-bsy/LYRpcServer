@@ -18,6 +18,6 @@ $Aop=action.txt
 #---------------------protocol defines---------------------
 
 #---------------------server port
-port=1234
+port=2001
 
 ipWhiteList=127.0.0.1

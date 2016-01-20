@@ -13,7 +13,7 @@ import net.vicp.lylab.utils.creator.InstanceCreator;
 import net.vicp.lylab.utils.internet.ClientLongSocket;
 import net.vicp.lylab.utils.operation.KeepAliveValidator;
 
-public class Caller extends NonCloneableBaseObject implements LifeCycle {
+public class RPCaller extends NonCloneableBaseObject implements LifeCycle {
 	AutoGeneratePool<ClientLongSocket> pool = null;
 	AutoCreator<ClientLongSocket> creator = null;
 
