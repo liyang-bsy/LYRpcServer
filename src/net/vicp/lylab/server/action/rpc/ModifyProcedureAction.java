@@ -2,12 +2,13 @@ package net.vicp.lylab.server.action.rpc;
 
 import java.util.List;
 
+import net.vicp.lylab.core.BaseAction;
 import net.vicp.lylab.core.CoreDef;
-import net.vicp.lylab.core.model.RPCBaseAction;
+import net.vicp.lylab.core.model.Pair;
 import net.vicp.lylab.server.action.manager.SwithModificationAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 
-public class RegisterServerAction extends RPCBaseAction {
+public class ModifyProcedureAction extends BaseAction {
 
 	@Override
 	public void exec() {
@@ -24,11 +25,13 @@ public class RegisterServerAction extends RPCBaseAction {
 
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
 
-			connector.addServer(server, ip, port);
+			List<Pair<String, Integer>> addr = connector.getAllAddress(server);
+			if (!addr.contains(new Pair<>(ip, port))) {
+				getResponse().fail("Background server can only modify itself");
+				break;
+			}
 			connector.addProcedures(server, procedures);
 
-			// No sync, stand alone mode
-			// TODO comunication and sync with other RPC server
 			getResponse().success();
 		} while (false);
 	}

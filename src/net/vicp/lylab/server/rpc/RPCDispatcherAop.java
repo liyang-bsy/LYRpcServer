@@ -19,6 +19,7 @@ public class RPCDispatcherAop extends SimpleKeyDispatcherAop implements Aop {
 	@Override
 	public byte[] doAction(Socket client, byte[] requestByte, int offset) {
 		RPCMessage request = null;
+		Message rpcReq = null;
 
 		String key = null;
 		BaseAction action = null;
@@ -35,6 +36,12 @@ public class RPCDispatcherAop extends SimpleKeyDispatcherAop implements Aop {
 				}
 				if(request == null) {
 					response.setCode(0x00000001);
+					response.setMessage("Message not found");
+					break;
+				}
+				rpcReq = request.getRpcReq();
+				if(rpcReq == null) {
+					response.setCode(0x00000001);
 					response.setMessage("RPCMessage not found");
 					break;
 				}
@@ -42,12 +49,12 @@ public class RPCDispatcherAop extends SimpleKeyDispatcherAop implements Aop {
 				if (filterChain != null && filterChain.size() != 0)
 					for (Filter filter : filterChain) {
 						Message ret = null;
-						if ((ret = filter.doFilter(client, request)) != null)
+						if ((ret = filter.doFilter(client, rpcReq)) != null)
 							return protocol.encode(ret);
 					}
 				response.copyBasicInfo(request);
-				// gain key from request
-				key = request.getKey();
+				// gain key from rpcReq
+				key = rpcReq.getKey();
 				if (StringUtils.isBlank(key)) {
 					response.setCode(0x00000002);
 					response.setMessage("Key not found");
@@ -60,12 +67,12 @@ public class RPCDispatcherAop extends SimpleKeyDispatcherAop implements Aop {
 						response.setMessage("Server is blank");
 						break;
 					}
-					// check procedure from request
-					if (StringUtils.isBlank(request.getProcedure())) {
-						response.setCode(0x00000102);
-						response.setMessage("Procedure is blank");
-						break;
-					}
+//					// check procedure from request
+//					if (StringUtils.isBlank(request.getProcedure())) {
+//						response.setCode(0x00000102);
+//						response.setMessage("Procedure is blank");
+//						break;
+//					}
 				}
 				// get action related to key
 				try {

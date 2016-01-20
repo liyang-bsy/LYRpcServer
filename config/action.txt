@@ -1,8 +1,6 @@
 CheckRuntimeAction=net.vicp.lylab.server.action.manager.CheckRuntimeAction
-
-IncAction=net.vicp.lylab.server.action.IncAction
-DecAction=net.vicp.lylab.server.action.DecAction
+SwithModificationAction=net.vicp.lylab.server.action.manager.SwithModificationAction
 
 RPCActionAction=net.vicp.lylab.server.action.rpc.RPCActionAction
 RegisterServerAction=net.vicp.lylab.server.action.rpc.RegisterServerAction
-RemoveServerAction=net.vicp.lylab.server.action.rpc.RemoveServerAction
+ModifyProcedureAction=net.vicp.lylab.server.action.rpc.ModifyProcedureAction

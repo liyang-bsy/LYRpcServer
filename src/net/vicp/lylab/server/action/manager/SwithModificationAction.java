@@ -1,17 +1,17 @@
 package net.vicp.lylab.server.action.manager;
 
-import java.util.Date;
-
 import net.vicp.lylab.core.model.RPCBaseAction;
 import net.vicp.lylab.utils.Utils;
+import net.vicp.lylab.utils.atomic.AtomicBoolean;
 
-public class CheckRuntimeAction extends RPCBaseAction {
+public class SwithModificationAction extends RPCBaseAction {
+	public static AtomicBoolean changeable = new AtomicBoolean(true);
 
 	@Override
 	public void exec() {
 		try {
 			do {
-				getResponse().getBody().put("Current time is ", Utils.format(new Date(), "yyyy-MM-dd HH-mm:ss"));
+				getResponse().getBody().put("Current mode is ", changeable.get()?"changeable":"changeable");
 				getResponse().success();
 			} while (false);
 		} catch (Exception e) {

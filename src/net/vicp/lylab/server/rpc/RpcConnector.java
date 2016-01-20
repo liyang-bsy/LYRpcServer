@@ -31,13 +31,11 @@ public class RpcConnector extends NonCloneableBaseObject {
 	//				ip				Socket
 	protected final Map<String, AutoGeneratePool<ClientLongSocket>> ip2ConnectionPool;
 	//				ip				creators
+	
 //	protected Map<String, AutoCreator<ClientLongSocket>> ip2Creator;
 	
 	// random access
 	protected transient final Random random = new Random();
-	
-	// mode
-	protected boolean restrict = true;
 
 	public RpcConnector() {
 		server2procedure = new HashMap<>();
@@ -54,12 +52,16 @@ public class RpcConnector extends NonCloneableBaseObject {
 	}
 
 	private void returnConnection(ClientLongSocket socket) {
+		returnConnection(socket, false);
+	}
+	
+	private void returnConnection(ClientLongSocket socket, boolean isBad) {
 		if (socket == null)
 			throw new NullPointerException("Parameter socket is null");
 		AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.get(socket.getHost());
 		if (pool == null)
 			throw new LYException("Connection pool is null for ip:" + socket.getHost());
-			pool.recycle(socket);
+		pool.recycle(socket, isBad);
 	}
 
 	public Message request(String ip, int port, RPCMessage request) {
@@ -69,49 +71,52 @@ public class RpcConnector extends NonCloneableBaseObject {
 		ClientLongSocket socket = getConnection(ip, port);
 		Protocol p = socket.getProtocol();
 
-		byte[] nextReq = p.encode(request.getMessage());
-		int torelent = 10;
+		byte[] nextReq = p.encode(request);
+		int torelent = 5;
 		do {
 			byte[] response = null;
 			try {
 				response = socket.request(nextReq);
 			} catch (Exception e) {
+				returnConnection(socket, true);
 				continue;
 			}
 			returnConnection(socket);
 			return (Message) p.decode(response);
 		} while (torelent-- > 0);
-		throw new LYException("Maximun torelent is reached, socket request failed.");
+		removeServer(request.getServer(), ip);
+		log.fatal("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
+		throw new LYException("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 	}
 
-	public List<Pair<String, Integer>> getOneRandomAddress(String server, String procedure) {
+	public List<Pair<String, Integer>> getOneRandomAddress(String server) {//, String procedure) {
 		List<Pair<String, Integer>> retList = new ArrayList<>();
 		List<Pair<String, Integer>> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
-		if (restrict) {
-			Set<String> procedures = server2procedure.get(server);
-			if (procedures == null)
-				throw new LYException("No such server:" + server);
-			if (!procedures.contains(procedure))
-				throw new LYException("No such procedure:" + procedure);
-		}
+//		if (restrict) {
+//			Set<String> procedures = server2procedure.get(server);
+//			if (procedures == null)
+//				throw new LYException("No such server:" + server);
+//			if (!procedures.contains(procedure))
+//				throw new LYException("No such procedure:" + procedure);
+//		}
 		int seq = random.nextInt(addrList.size());
 		retList.add(addrList.get(seq));
 		return retList;
 	}
 
-	public List<Pair<String, Integer>> getAllAddress(String server, String procedure) {
+	public List<Pair<String, Integer>> getAllAddress(String server) {//, String procedure) {
 		List<Pair<String, Integer>> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
-		if (restrict) {
-			Set<String> procedures = server2procedure.get(server);
-			if (procedures == null)
-				throw new LYException("No such server:" + server);
-			if (!procedures.contains(procedure))
-				throw new LYException("No such procedure:" + procedure);
-		}
+//		if (restrict) {
+//			Set<String> procedures = server2procedure.get(server);
+//			if (procedures == null)
+//				throw new LYException("No such server:" + server);
+//			if (!procedures.contains(procedure))
+//				throw new LYException("No such procedure:" + procedure);
+//		}
 		return addrList;
 	}
 
@@ -156,6 +161,10 @@ public class RpcConnector extends NonCloneableBaseObject {
 		synchronized (lock) {
 			server2addr.remove(server);
 			server2procedure.remove(server);
+
+			AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.remove(ip);
+			if (pool != null)
+				pool.close();
 		}
 	}
 
