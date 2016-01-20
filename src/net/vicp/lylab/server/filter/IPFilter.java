@@ -14,9 +14,16 @@ public class IPFilter extends NonCloneableBaseObject implements Filter {
 	public Message doFilter(Socket socket, Message request) {
 		String host = socket.getInetAddress().getHostAddress();
 		
-		if(request.getKey().equals("SwithModification") && "127.0.0.1".equals(host)) return null;
-		if(Utils.inList(CoreDef.config.getString("ipWhiteList").split(","), host)) return null;
-		throw new LYException("IP[" + host + "] is forbidden");
+		if (request.getKey().startsWith("Privilege")) {
+			if ("127.0.0.1".equals(host))
+				return null;
+			else
+				throw new LYException("Remote access is forbidden for privilege actions");
+		}
+		if (Utils.inList(CoreDef.config.getString("ipWhiteList").split(","), host))
+			return null;
+		else
+			throw new LYException("IP[" + host + "] is forbidden");
 	}
 
 	@Override

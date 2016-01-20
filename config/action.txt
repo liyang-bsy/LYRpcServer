@@ -1,5 +1,6 @@
-CheckRuntimeAction=net.vicp.lylab.server.action.manager.CheckRuntimeAction
-SwithModificationAction=net.vicp.lylab.server.action.manager.SwithModificationAction
+PrivilegeCheckRuntimeAction=net.vicp.lylab.server.action.manager.CheckRuntimeAction
+PrivilegeSwithModificationAction=net.vicp.lylab.server.action.manager.SwithModificationAction
+PrivilegeStopAction=net.vicp.lylab.server.action.manager.StopAction
 
 RPCActionAction=net.vicp.lylab.server.action.rpc.RPCActionAction
 RegisterServerAction=net.vicp.lylab.server.action.rpc.RegisterServerAction
