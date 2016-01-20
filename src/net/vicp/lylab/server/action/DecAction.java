@@ -1,20 +1,20 @@
 package net.vicp.lylab.server.action;
 
-import net.vicp.lylab.core.BaseAction;
+import net.vicp.lylab.core.model.RPCBaseAction;
 
-public class DecAction extends BaseAction {
+public class DecAction extends RPCBaseAction {
 
 	@Override
 	public void exec() {
 		do {
 			Integer i = (Integer) getRequest().getBody().get("int");
 			if (i == null) {
-				response.setCode(-2);
-				response.setMessage("数字不存在");
+				getResponse().setCode(-2);
+				getResponse().setMessage("数字不存在");
 				break;
 			}
-			response.getBody().put("int", i--);
-		response.success(); } while (false);
+			getResponse().getBody().put("int", i--);
+		getResponse().success(); } while (false);
 	}
 
 }

@@ -1,11 +1,12 @@
 [TREE]
 !debug=0
-server=LYServer
+server=LYRpcServer
 
 $Singleton=init.txt
 
 $Aop=action.txt
 
+#---------------------protocol defines---------------------
 *LYLabProtocol=net.vicp.lylab.utils.internet.impl.LYLabProtocol
 
 *protocol=&LYLabProtocol
@@ -14,10 +15,9 @@ $Aop=action.txt
 []protocols=&LYLabProtocol
 *ProtocolUtils=net.vicp.lylab.utils.internet.protocol.ProtocolUtils
 ^rawProtocols=&protocols
+#---------------------protocol defines---------------------
 
+#---------------------server port
 port=1234
 
 ipWhiteList=127.0.0.1
-
-BaiduServerUrl:0=http://www.baidu.com/
-BaiduServerUrl:1=http://www.baidu.com/

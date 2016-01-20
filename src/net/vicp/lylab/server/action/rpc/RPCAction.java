@@ -3,12 +3,12 @@ package net.vicp.lylab.server.action.rpc;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.vicp.lylab.core.BaseAction;
+import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.Pair;
+import net.vicp.lylab.core.model.RPCBaseAction;
 import net.vicp.lylab.core.model.RPCMessage;
-import net.vicp.lylab.server.rpc.connector.ServerConnector;
-import net.vicp.lylab.server.rpc.connector.ServerDispathcer;
+import net.vicp.lylab.server.rpc.RpcConnector;
 import net.vicp.lylab.utils.Utils;
 
 /**
@@ -17,31 +17,32 @@ import net.vicp.lylab.utils.Utils;
  * @author Young
  *
  */
-public class RPCAction extends BaseAction {
+public class RPCAction extends RPCBaseAction {
 
 	@Override
 	public void exec() {
-		// TODO
-		ServerDispathcer serverDispathcer = new ServerDispathcer();
-		ServerConnector serverConnector = new ServerConnector();
-		try {
-			RPCMessage req = (RPCMessage) getRequest();
-			if (req.isBroadcast()) {
-				List<Pair<String, Integer>> addrList = serverDispathcer.getAllAddress(req.getServer(), req.getProcedure());
-				List<Pair<String, Message>> result = new ArrayList<>();
-				for (Pair<String, Integer> addr : addrList) {
-					Message message = serverConnector.request(addr.getLeft(), addr.getRight(), req);
-					result.add(new Pair<>(addr.getLeft(), message));
+		do {
+			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
+
+			RPCMessage req = getRequest();
+			List<Pair<String, Integer>> addrList = null;
+			try {
+				if (req.isBroadcast()) {
+					addrList = connector.getAllAddress(req.getServer(), req.getProcedure());
+				} else {
+					addrList = connector.getOneRandomAddress(req.getServer(), req.getProcedure());
 				}
-				getResponse().getBody().put("BraodCastResult", result);
-			} else {
-				Pair<String, Integer> addr = serverDispathcer.getRandomAddress(req.getServer(), req.getProcedure());
-				Message message = serverConnector.request(addr.getLeft(), addr.getRight(), req);
-				setResponse(message);
+			} catch (Exception e) {
+				getResponse().fail("Access rpc server list faild:" + Utils.getStringFromException(e));
 			}
-		} catch (Throwable t) {
-			log.fatal(Utils.getStringFromThrowable(t));
-		}
+			List<Pair<String, Message>> result = new ArrayList<>();
+			for (Pair<String, Integer> addr : addrList) {
+				Message message = connector.request(addr.getLeft(), addr.getRight(), req);
+				result.add(new Pair<>(addr.getLeft(), message));
+			}
+			getResponse().getBody().put("BraodCastResult", result);
+			getResponse().success();
+		} while (false);
 	}
 
 }

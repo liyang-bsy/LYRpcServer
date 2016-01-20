@@ -1,14 +1,17 @@
+#---------------------LYTQ
 *LYTaskQueue=net.vicp.lylab.utils.tq.LYTaskQueue
 
+#---------------------LYCache
 *LYCache=net.vicp.lylab.utils.cache.LYCache
 ^memoryLimitation=6442450944
 ^expireTime=259200000
 ^threshold=0.9
 
+#---------------------Timer
 *RefreshCache=net.vicp.lylab.utils.cache.RefreshCache
 ^lyCache=&LYCache
-*RemoveOldLog=net.vicp.lylab.lyserver.timer.RemoveOldLog
-*HeartBeat=net.vicp.lylab.lyserver.timer.HeartBeat
+*RemoveOldLog=net.vicp.lylab.server.timer.RemoveOldLog
+*HeartBeat=net.vicp.lylab.server.timer.HeartBeat
 ^serverName=&server
 
 []timerJobs=&RefreshCache
@@ -18,23 +21,32 @@
 *LYTimer=net.vicp.lylab.utils.timer.LYTimer
 ^jobs=&timerJobs
 
+#---------------------Timeout Controller
 *TimeoutController=net.vicp.lylab.utils.controller.TimeoutController
 
-*CacheLifeCycle=net.vicp.lylab.lyserver.utils.CacheLifeCycle
+#---------------------Save Cache
+*CacheLifeCycle=net.vicp.lylab.server.utils.CacheLifeCycle
 ^savePath=D:/BAuthServerData/LYCache
 ^lyCache=&LYCache
 
-*Logger=net.vicp.lylab.lyserver.utils.Logger
+#---------------------Logger
+*Logger=net.vicp.lylab.server.utils.Logger
 ^filePath=D:/BAuthServerData/record
 ^fileSuffix=.log
 
-*filter1=net.vicp.lylab.lyserver.filter.IPFilter
+#----------------------Filter chain
+*filter1=net.vicp.lylab.server.filter.IPFilter
 []filters=&filter1
 
-*Aop=net.vicp.lylab.lyserver.aop.AuthAop
+#----------------------RPC Aop
+*Aop=net.vicp.lylab.server.rpc.RPCDispatcherAop
 ^protocol=&protocol
 ^filterChain=&filters
 
+#----------------------RPC Connector
+*connector=net.vicp.lylab.server.rpc.RpcConnector
+
+#----------------------Sync Server
 *SyncServer=net.vicp.lylab.server.runtime.SyncServer
 ^lyTaskQueue=&LYTaskQueue
 ^port=&port
