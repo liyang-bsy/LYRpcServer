@@ -1,4 +1,4 @@
-package net.vicp.lylab.lyserver.action.manager;
+package net.vicp.lylab.server.action.manager;
 
 import java.util.Date;
 

@@ -1,8 +1,8 @@
-package net.vicp.lylab.lyserver.action;
+package net.vicp.lylab.server.action;
 
 import net.vicp.lylab.core.BaseAction;
 
-public class IncAction extends BaseAction {
+public class DecAction extends BaseAction {
 
 	@Override
 	public void exec() {
@@ -13,7 +13,7 @@ public class IncAction extends BaseAction {
 				response.setMessage("数字不存在");
 				break;
 			}
-			response.getBody().put("int", i++);
+			response.getBody().put("int", i--);
 		response.success(); } while (false);
 	}
 

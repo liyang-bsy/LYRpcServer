@@ -1,4 +1,4 @@
-package net.vicp.lylab.lyserver.model;
+package net.vicp.lylab.server.model;
 
 import net.vicp.lylab.core.CloneableBaseObject;
 import net.vicp.lylab.core.model.CacheValue;

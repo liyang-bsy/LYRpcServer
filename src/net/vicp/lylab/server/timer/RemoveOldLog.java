@@ -1,11 +1,11 @@
-package net.vicp.lylab.lyserver.timer;
+package net.vicp.lylab.server.timer;
 
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
 import net.vicp.lylab.core.CoreDef;
-import net.vicp.lylab.lyserver.utils.Logger;
+import net.vicp.lylab.server.utils.Logger;
 import net.vicp.lylab.utils.Utils;
 import net.vicp.lylab.utils.timer.TimerJob;
 

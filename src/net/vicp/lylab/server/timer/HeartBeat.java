@@ -1,4 +1,4 @@
-package net.vicp.lylab.lyserver.timer;
+package net.vicp.lylab.server.timer;
 
 import java.util.Calendar;
 import java.util.Date;

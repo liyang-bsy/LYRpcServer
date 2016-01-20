@@ -1,9 +1,9 @@
-package net.vicp.lylab.lyserver.utils;
+package net.vicp.lylab.server.utils;
 
 import net.vicp.lylab.core.NonCloneableBaseObject;
 import net.vicp.lylab.core.interfaces.LifeCycle;
 import net.vicp.lylab.core.model.CacheValue;
-import net.vicp.lylab.lyserver.model.CacheValueEntry;
+import net.vicp.lylab.server.model.CacheValueEntry;
 import net.vicp.lylab.utils.Utils;
 import net.vicp.lylab.utils.cache.CacheContainer;
 import net.vicp.lylab.utils.cache.LYCache;

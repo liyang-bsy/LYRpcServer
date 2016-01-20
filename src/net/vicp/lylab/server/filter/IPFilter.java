@@ -1,4 +1,4 @@
-package net.vicp.lylab.lyserver.filter;
+package net.vicp.lylab.server.filter;
 
 import java.net.Socket;
 

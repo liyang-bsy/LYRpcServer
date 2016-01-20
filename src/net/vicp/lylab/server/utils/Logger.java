@@ -1,4 +1,4 @@
-package net.vicp.lylab.lyserver.utils;
+package net.vicp.lylab.server.utils;
 
 import java.io.File;
 
