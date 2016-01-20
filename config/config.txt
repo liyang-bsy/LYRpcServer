@@ -2,9 +2,9 @@
 !debug=0
 server=LYRpcServer
 
-$Singleton=init.txt
-
 $Aop=action.txt
+
+$Singleton=init.txt
 
 #---------------------protocol defines---------------------
 *LYLabProtocol=net.vicp.lylab.utils.internet.impl.LYLabProtocol

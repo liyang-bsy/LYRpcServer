@@ -26,12 +26,12 @@
 
 #---------------------Save Cache
 *CacheLifeCycle=net.vicp.lylab.server.utils.CacheLifeCycle
-^savePath=D:/BAuthServerData/LYCache
+^savePath=D:/RPCServer/LYCache
 ^lyCache=&LYCache
 
 #---------------------Logger
 *Logger=net.vicp.lylab.server.utils.Logger
-^filePath=D:/BAuthServerData/record
+^filePath=D:/RPCServer/record
 ^fileSuffix=.log
 
 #----------------------Filter chain

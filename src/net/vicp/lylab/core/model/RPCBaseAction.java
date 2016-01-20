@@ -9,9 +9,4 @@ public abstract class RPCBaseAction extends BaseAction {
 		return (RPCMessage) super.getRequest();
 	}
 
-	@Override
-	public RPCMessage getResponse() {
-		return (RPCMessage) super.getResponse();
-	}
-
 }
