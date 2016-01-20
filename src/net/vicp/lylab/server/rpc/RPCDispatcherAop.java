@@ -97,9 +97,10 @@ public class RPCDispatcherAop extends SimpleKeyDispatcherAop implements Aop {
 			log.error(Utils.getStringFromException(e));
 		}
 		// to logger
-		System.out.println("Access key:" + key  + "\nBefore:" + request + "\nAfter:" + response);
-		((Logger) CoreDef.config.getConfig("Singleton").getObject("Logger")).appendLine(
-				"Access key:" + key  + "\nBefore:" + request + "\nAfter:" + response);
+		System.out.println("Access key:" + key + "\tAccess rpcKey:" + request.getRpcKey() + "\nBefore:" + request
+				+ "\nAfter:" + response);
+		((Logger) CoreDef.config.getConfig("Singleton").getObject("Logger")).appendLine("Access key:" + key
+				+ "\tAccess rpcKey:" + request.getRpcKey() + "\nBefore:" + request + "\nAfter:" + response);
 		return protocol.encode(response);
 	}
 

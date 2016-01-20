@@ -44,7 +44,7 @@ public class RPCAction extends RPCBaseAction {
 					message = connector.request(addr.getLeft(), addr.getRight(), req);
 				} catch (Exception e) {
 					if (req.isBroadcast())
-						message.setMessage("Unreachable");
+						message.setMessage("Unreachable server:" + addr);
 					else
 						continue retry;
 				}

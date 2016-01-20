@@ -31,7 +31,7 @@ public class IPFilter extends NonCloneableBaseObject implements Filter {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 	}
 
 }

@@ -68,12 +68,11 @@ public class RpcConnector extends NonCloneableBaseObject {
 		if (request == null)
 			throw new NullPointerException("Parameter request is null");
 
-		ClientLongSocket socket = getConnection(ip, port);
-		Protocol p = socket.getProtocol();
-
+		Protocol p = (Protocol) CoreDef.config.getObject("protocol");
 		byte[] nextReq = p.encode(request);
 		int torelent = 5;
 		do {
+			ClientLongSocket socket = getConnection(ip, port);
 			byte[] response = null;
 			try {
 				response = socket.request(nextReq);

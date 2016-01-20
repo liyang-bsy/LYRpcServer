@@ -13,7 +13,7 @@ public class ModifyProcedureAction extends BaseAction {
 	@Override
 	public void exec() {
 		do {
-			if (SwithModificationAction.changeable.get()) {
+			if (SwithModificationAction.isChangeable()) {
 				getResponse().fail("Current mode is unchangeable");
 				break;
 			}
