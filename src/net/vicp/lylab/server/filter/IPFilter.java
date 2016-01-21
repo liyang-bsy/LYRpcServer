@@ -6,10 +6,9 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.NonCloneableBaseObject;
 import net.vicp.lylab.core.exceptions.LYException;
 import net.vicp.lylab.core.model.Message;
-import net.vicp.lylab.server.filter.Filter;
 import net.vicp.lylab.utils.Utils;
 
-public class IPFilter extends NonCloneableBaseObject implements Filter {
+public class IPFilter extends NonCloneableBaseObject implements Filter<Message, Message> {
 	
 	public Message doFilter(Socket socket, Message request) {
 		String host = socket.getInetAddress().getHostAddress();
