@@ -46,16 +46,18 @@
 *connector=net.vicp.lylab.server.rpc.RpcConnector
 
 #----------------------Sync Server
-*SyncServer=net.vicp.lylab.server.runtime.SyncServer
+#*SyncServer=net.vicp.lylab.server.runtime.SyncServer
+#^taskQueue=&LYTaskQueue
+#^dispatcher=&dispatcher
+#^port=&port
+#^protocol=&protocol
+#^heartBeat=&heartBeat
+
+#----------------------Async Server
+*AsyncServer=net.vicp.lylab.server.runtime.AsyncServer
 ^taskQueue=&LYTaskQueue
-^dispatcher=&dispatcher
 ^port=&port
+^dispatcher=&dispatcher
 ^protocol=&protocol
 ^heartBeat=&heartBeat
-#----------------------Async Server
-#*AsyncServer=net.vicp.lylab.server.runtime.AsyncServer
-#^taskQueue=&LYTaskQueue
-#^port=&port
-#^Aop=&Aop
-#^protocol=&protocol
 
