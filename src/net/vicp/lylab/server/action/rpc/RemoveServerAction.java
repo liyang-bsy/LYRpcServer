@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.vicp.lylab.core.BaseAction;
 import net.vicp.lylab.core.CoreDef;
-import net.vicp.lylab.core.model.Pair;
+import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.server.action.manager.SwithModificationAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 
@@ -23,8 +23,8 @@ public class RemoveServerAction extends BaseAction {
 
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
 
-			List<Pair<String, Integer>> addr = connector.getAllAddress(server);
-			if (!addr.contains(new Pair<>(ip, port))) {
+			List<InetAddr> addr = connector.getAllAddress(server);
+			if (!addr.contains(InetAddr.fromInetAddr(ip, port))) {
 				getResponse().fail("Background server can only remove itself");
 				break;
 			}

@@ -14,25 +14,24 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.NonCloneableBaseObject;
 import net.vicp.lylab.core.exceptions.LYException;
 import net.vicp.lylab.core.interfaces.Protocol;
+import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.core.model.Message;
-import net.vicp.lylab.core.model.Pair;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.pool.AutoGeneratePool;
 import net.vicp.lylab.utils.creator.AutoCreator;
 import net.vicp.lylab.utils.creator.InstanceCreator;
-import net.vicp.lylab.utils.internet.ClientLongSocket;
+import net.vicp.lylab.utils.internet.SyncSession;
 import net.vicp.lylab.utils.operation.KeepAliveValidator;
 
 public class RpcConnector extends NonCloneableBaseObject {
 	//					Server	Procedure
 	protected final Map<String, Set<String>> server2procedure;
-	//					Server		Address:ip	port
-	protected final Map<String, List<Pair<String, Integer>>> server2addr;
-	//				ip				Socket
-	protected final Map<String, AutoGeneratePool<ClientLongSocket>> ip2ConnectionPool;
-	//				ip				creators
+	//					Server		Address
+	protected final Map<String, List<InetAddr>> server2addr;
+	//						ip				Socket Pool
+	protected final Map<InetAddr, AutoGeneratePool<SyncSession>> addr2ConnectionPool;
 	
-//	protected Map<String, AutoCreator<ClientLongSocket>> ip2Creator;
+//	protected Map<String, AutoCreator<SyncSession>> ip2Creator;
 	
 	// random access
 	protected transient final Random random = new Random();
@@ -40,27 +39,27 @@ public class RpcConnector extends NonCloneableBaseObject {
 	public RpcConnector() {
 		server2procedure = new HashMap<>();
 		server2addr = new HashMap<>();
-		ip2ConnectionPool = new HashMap<>();
+		addr2ConnectionPool = new HashMap<>();
 //		ip2Creator = new HashMap<>();
 	}
 
-	private ClientLongSocket getConnection(String ip, int port) {
-		AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.get(ip);
+	private SyncSession getConnection(String ip, int port) {
+		AutoGeneratePool<SyncSession> pool = addr2ConnectionPool.get(InetAddr.fromInetAddr(ip, port));
 		if (pool == null)
 			throw new LYException("Connection pool is null for ip:" + ip);
 		return pool.accessOne();
 	}
 
-	private void returnConnection(ClientLongSocket socket) {
+	private void returnConnection(SyncSession socket) {
 		returnConnection(socket, false);
 	}
 	
-	private void returnConnection(ClientLongSocket socket, boolean isBad) {
+	private void returnConnection(SyncSession socket, boolean isBad) {
 		if (socket == null)
 			throw new NullPointerException("Parameter socket is null");
-		AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.get(socket.getHost());
+		AutoGeneratePool<SyncSession> pool = addr2ConnectionPool.get(socket.getPeer());
 		if (pool == null)
-			throw new LYException("Connection pool is null for ip:" + socket.getHost());
+			throw new LYException("Connection pool is null for addr:" + socket.getPeer());
 		pool.recycle(socket, isBad);
 	}
 
@@ -72,10 +71,11 @@ public class RpcConnector extends NonCloneableBaseObject {
 		byte[] nextReq = p.encode(request);
 		int torelent = 5;
 		do {
-			ClientLongSocket socket = getConnection(ip, port);
+			SyncSession socket = getConnection(ip, port);
 			byte[] response = null;
 			try {
-				response = socket.request(nextReq);
+				socket.send(nextReq);
+				response = socket.receive().getLeft();
 			} catch (Exception e) {
 				returnConnection(socket, true);
 				continue;
@@ -88,9 +88,9 @@ public class RpcConnector extends NonCloneableBaseObject {
 		throw new LYException("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 	}
 
-	public List<Pair<String, Integer>> getOneRandomAddress(String server) {//, String procedure) {
-		List<Pair<String, Integer>> retList = new ArrayList<>();
-		List<Pair<String, Integer>> addrList = server2addr.get(server);
+	public List<InetAddr> getOneRandomAddress(String server) {//, String procedure) {
+		List<InetAddr> retList = new ArrayList<>();
+		List<InetAddr> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
 //		if (restrict) {
@@ -105,8 +105,8 @@ public class RpcConnector extends NonCloneableBaseObject {
 		return retList;
 	}
 
-	public List<Pair<String, Integer>> getAllAddress(String server) {//, String procedure) {
-		List<Pair<String, Integer>> addrList = server2addr.get(server);
+	public List<InetAddr> getAllAddress(String server) {//, String procedure) {
+		List<InetAddr> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
 //		if (restrict) {
@@ -121,18 +121,19 @@ public class RpcConnector extends NonCloneableBaseObject {
 
 	public void addServer(String server, String ip, int port) {
 		synchronized (lock) {
+			InetAddr addr = InetAddr.fromInetAddr(ip, port);
 			addServer(server);
-			server2addr.get(server).add(new Pair<>(ip, port));
+			server2addr.get(server).add(InetAddr.fromInetAddr(ip, port));
 
-			AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.get(ip);
+			AutoGeneratePool<SyncSession> pool = addr2ConnectionPool.get(addr);
 			if (pool == null) {
-				AutoCreator<ClientLongSocket> creator = new InstanceCreator<ClientLongSocket>(
-						ClientLongSocket.class, ip, port, CoreDef.config.getObject("protocol"),
+				AutoCreator<SyncSession> creator = new InstanceCreator<SyncSession>(
+						SyncSession.class, ip, port, CoreDef.config.getObject("protocol"),
 						CoreDef.config.getObject("heartBeat"));
-				pool = new AutoGeneratePool<ClientLongSocket>(creator, new KeepAliveValidator<ClientLongSocket>(),
+				pool = new AutoGeneratePool<SyncSession>(creator, new KeepAliveValidator<SyncSession>(),
 						20000, Integer.MAX_VALUE);
 //				ip2Creator.put(ip, creator);
-				ip2ConnectionPool.put(ip, pool);
+				addr2ConnectionPool.put(addr, pool);
 			}
 		}
 	}
@@ -140,7 +141,7 @@ public class RpcConnector extends NonCloneableBaseObject {
 	private void addServer(String server) {
 		synchronized (lock) {
 			if (server2addr.get(server) == null)
-				server2addr.put(server, new ArrayList<Pair<String, Integer>>());
+				server2addr.put(server, new ArrayList<InetAddr>());
 			if (server2procedure.get(server) == null)
 				server2procedure.put(server, new HashSet<String>());
 		}
@@ -158,10 +159,18 @@ public class RpcConnector extends NonCloneableBaseObject {
 
 	public void removeServer(String server, String ip) {
 		synchronized (lock) {
-			server2addr.remove(server);
+			List<InetAddr> list = server2addr.remove(server);
 			server2procedure.remove(server);
 
-			AutoGeneratePool<ClientLongSocket> pool = ip2ConnectionPool.remove(ip);
+			AutoGeneratePool<SyncSession> pool = null;
+			for (InetAddr addr : list) {
+				if (!addr.getIp().equals(ip)) {
+					continue;
+				}
+				pool = addr2ConnectionPool.remove(ip);
+				break;
+
+			}
 			if (pool != null)
 				pool.close();
 		}

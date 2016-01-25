@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import net.vicp.lylab.core.CoreDef;
+import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.Pair;
 import net.vicp.lylab.core.model.RPCBaseAction;
@@ -41,7 +42,7 @@ public class RPCAction extends RPCBaseAction {
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
 
 			RPCMessage req = getRequest();
-			List<Pair<String, Integer>> addrList = new ArrayList<>();
+			List<InetAddr> addrList = new ArrayList<>();
 			List<Pair<String, Message>> result = new ArrayList<>();
 			retry: while (true) {
 				try {
@@ -54,21 +55,21 @@ public class RPCAction extends RPCBaseAction {
 					getResponse().fail("Access rpc server list faild:" + Utils.getStringFromException(e));
 					return;
 				}
-				for (Pair<String, Integer> addr : addrList) {
+				for (InetAddr addr : addrList) {
 					Message message = new Message();
 					try {
-						message = connector.request(addr.getLeft(), addr.getRight(), req);
+						message = connector.request(addr.getIp(), addr.getPort(), req);
 					} catch (Exception e) {
 						if (req.isBroadcast())
 							message.setMessage("Unreachable server:" + addr);
 						else
 							continue retry;
 					}
-					result.add(new Pair<>(addr.getLeft(), message));
+					result.add(new Pair<>(addr.getIp(), message));
 				}
 				break;
 			}
-			getResponse().getBody().put("BraodCastResult", result);
+			getResponse().getBody().put("CallResult", result);
 			getResponse().success();
 		} while (false);
 	}

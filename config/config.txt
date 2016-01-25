@@ -7,14 +7,14 @@ $Aop=action.txt
 $Singleton=init.txt
 
 #---------------------protocol defines---------------------
-*LYLabProtocol=net.vicp.lylab.utils.internet.impl.LYLabProtocol
+*LYLabProtocol=net.vicp.lylab.utils.internet.protocol.LYLabProtocol
 
 *protocol=&LYLabProtocol
 *heartBeat=net.vicp.lylab.core.model.SimpleHeartBeat
 
-[]protocols=&LYLabProtocol
-*ProtocolUtils=net.vicp.lylab.utils.internet.protocol.ProtocolUtils
-^rawProtocols=&protocols
+#[]protocols=&LYLabProtocol
+#*ProtocolUtils=net.vicp.lylab.utils.internet.protocol.ProtocolUtils
+#^rawProtocols=&protocols
 #---------------------protocol defines---------------------
 
 #---------------------server port

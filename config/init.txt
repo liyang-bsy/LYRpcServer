@@ -38,24 +38,24 @@
 *filter1=net.vicp.lylab.server.filter.IPFilter
 []filters=&filter1
 
-#----------------------RPC Aop
-*Aop=net.vicp.lylab.server.rpc.RPCDispatcherAop
-^protocol=&protocol
+#----------------------RPC Dispatcher
+*dispatcher=net.vicp.lylab.server.rpc.RPCDispatcherAop
 ^filterChain=&filters
 
 #----------------------RPC Connector
 *connector=net.vicp.lylab.server.rpc.RpcConnector
 
 #----------------------Sync Server
-#*SyncServer=net.vicp.lylab.server.runtime.SyncServer
-#^lyTaskQueue=&LYTaskQueue
+*SyncServer=net.vicp.lylab.server.runtime.SyncServer
+^taskQueue=&LYTaskQueue
+^dispatcher=&dispatcher
+^port=&port
+^protocol=&protocol
+^heartBeat=&heartBeat
+#----------------------Async Server
+#*AsyncServer=net.vicp.lylab.server.runtime.AsyncServer
+#^taskQueue=&LYTaskQueue
 #^port=&port
 #^Aop=&Aop
-#^longServer=true
-#----------------------Async Server
-*AsyncServer=net.vicp.lylab.server.runtime.AsyncServer
-^taskQueue=&LYTaskQueue
-^port=&port
-^Aop=&Aop
-^protocol=&protocol
+#^protocol=&protocol
 
