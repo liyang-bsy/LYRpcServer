@@ -1,6 +1,7 @@
 package client;
 
 import net.vicp.lylab.core.CoreDef;
+import net.vicp.lylab.core.interfaces.Protocol;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.utils.rpc.client.RPCaller;
 
@@ -8,6 +9,7 @@ public class RPCCmdHub {
 	public static void main(String[] args) {
 		CoreDef.config.reload("C:/config.txt");
 		RPCaller caller = new RPCaller();
+		caller.setProtocol((Protocol) CoreDef.config.getObject("protocol"));
 		caller.setBackgroundServer(false);
 		caller.initialize();
 
