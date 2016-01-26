@@ -4,4 +4,5 @@ PrivilegeStopAction=net.vicp.lylab.server.action.manager.StopAction
 
 RPCAction=net.vicp.lylab.server.action.rpc.RPCAction
 RegisterServerAction=net.vicp.lylab.server.action.rpc.RegisterServerAction
-ModifyProcedureAction=net.vicp.lylab.server.action.rpc.ModifyProcedureAction
+RemoveServerAction=net.vicp.lylab.server.action.rpc.RemoveServerAction
+SyncServerAction=net.vicp.lylab.server.action.rpc.SyncServerAction

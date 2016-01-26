@@ -1,14 +1,10 @@
 package net.vicp.lylab.server.rpc;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.NonCloneableBaseObject;
@@ -24,8 +20,6 @@ import net.vicp.lylab.utils.internet.SyncSession;
 import net.vicp.lylab.utils.operation.KeepAliveValidator;
 
 public class RpcConnector extends NonCloneableBaseObject {
-	//					Server		Procedure
-	protected final Map<String, Set<String>> server2procedure;
 	//					Server		Address
 	protected final Map<String, List<InetAddr>> server2addr;
 	//						ip				Socket Pool
@@ -35,9 +29,16 @@ public class RpcConnector extends NonCloneableBaseObject {
 	protected transient final Random random = new Random();
 
 	public RpcConnector() {
-		server2procedure = new HashMap<>();
 		server2addr = new HashMap<>();
 		addr2ConnectionPool = new HashMap<>();
+	}
+	
+	public boolean sync() {
+		// TODO
+//		Map<String, List<InetAddr>> server2addr = null;
+//		if(server2addr == null)
+//			return false;
+		return true;
 	}
 
 	private SyncSession getConnection(String ip, int port) {
@@ -106,8 +107,11 @@ public class RpcConnector extends NonCloneableBaseObject {
 	public void addServer(String server, String ip, int port) {
 		synchronized (lock) {
 			InetAddr addr = InetAddr.fromInetAddr(ip, port);
-			addServer(server);
-			server2addr.get(server).add(InetAddr.fromInetAddr(ip, port));
+			if (server2addr.get(server) == null)
+				server2addr.put(server, new ArrayList<InetAddr>());
+			List<InetAddr> list = server2addr.get(server);
+			if (!list.contains(addr))
+				server2addr.get(server).add(addr);
 
 			AutoGeneratePool<SyncSession> pool = addr2ConnectionPool.get(addr);
 			if (pool == null) {
@@ -121,29 +125,9 @@ public class RpcConnector extends NonCloneableBaseObject {
 		}
 	}
 
-	private void addServer(String server) {
-		synchronized (lock) {
-			if (server2addr.get(server) == null)
-				server2addr.put(server, new ArrayList<InetAddr>());
-			if (server2procedure.get(server) == null)
-				server2procedure.put(server, new HashSet<String>());
-		}
-	}
-
-	public void modifyProcedures(String server, Collection<String> procedures) {
-		synchronized (lock) {
-			if (server2addr.containsKey(server)) {
-				Iterator<String> iterator = procedures.iterator();
-				while (iterator.hasNext())
-					server2procedure.get(server).add(iterator.next());
-			}
-		}
-	}
-
 	public void removeServer(String server, String ip) {
 		synchronized (lock) {
 			List<InetAddr> list = server2addr.remove(server);
-			server2procedure.remove(server);
 
 			AutoGeneratePool<SyncSession> pool = null;
 			for (InetAddr addr : list) {
@@ -159,14 +143,4 @@ public class RpcConnector extends NonCloneableBaseObject {
 		}
 	}
 
-	public void removeProcedure(String server, String procedure) {
-		synchronized (lock) {
-			if (server2addr.containsKey(server)) {
-				server2procedure.containsValue(server);
-				Set<String> procedures = server2procedure.get(server);
-				procedures.remove(procedure);
-			}
-		}
-	}
-	
 }
