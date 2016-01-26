@@ -31,16 +31,13 @@ public class RpcConnector extends NonCloneableBaseObject {
 	//						ip				Socket Pool
 	protected final Map<InetAddr, AutoGeneratePool<SyncSession>> addr2ConnectionPool;
 	
-//	protected Map<String, AutoCreator<SyncSession>> ip2Creator;
-	
-	// random access
+	// for random access
 	protected transient final Random random = new Random();
 
 	public RpcConnector() {
 		server2procedure = new HashMap<>();
 		server2addr = new HashMap<>();
 		addr2ConnectionPool = new HashMap<>();
-//		ip2Creator = new HashMap<>();
 	}
 
 	private SyncSession getConnection(String ip, int port) {
@@ -94,13 +91,6 @@ public class RpcConnector extends NonCloneableBaseObject {
 		List<InetAddr> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
-//		if (restrict) {
-//			Set<String> procedures = server2procedure.get(server);
-//			if (procedures == null)
-//				throw new LYException("No such server:" + server);
-//			if (!procedures.contains(procedure))
-//				throw new LYException("No such procedure:" + procedure);
-//		}
 		int seq = random.nextInt(addrList.size());
 		retList.add(addrList.get(seq));
 		return retList;
@@ -110,13 +100,6 @@ public class RpcConnector extends NonCloneableBaseObject {
 		List<InetAddr> addrList = server2addr.get(server);
 		if (addrList == null)
 			throw new LYException("No such server:" + server);
-//		if (restrict) {
-//			Set<String> procedures = server2procedure.get(server);
-//			if (procedures == null)
-//				throw new LYException("No such server:" + server);
-//			if (!procedures.contains(procedure))
-//				throw new LYException("No such procedure:" + procedure);
-//		}
 		return addrList;
 	}
 
@@ -133,7 +116,6 @@ public class RpcConnector extends NonCloneableBaseObject {
 						CoreDef.config.getObject("heartBeat"));
 				pool = new AutoGeneratePool<SyncSession>(creator, new KeepAliveValidator<SyncSession>(),
 						20000, Integer.MAX_VALUE);
-//				ip2Creator.put(ip, creator);
 				addr2ConnectionPool.put(addr, pool);
 			}
 		}
