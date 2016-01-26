@@ -30,7 +30,7 @@ public class ModifyProcedureAction extends BaseAction {
 				getResponse().fail("Background server can only modify itself");
 				break;
 			}
-			connector.addProcedures(server, procedures);
+			connector.modifyProcedures(server, procedures);
 
 			getResponse().success();
 		} while (false);

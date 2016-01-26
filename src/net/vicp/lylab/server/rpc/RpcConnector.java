@@ -24,7 +24,7 @@ import net.vicp.lylab.utils.internet.SyncSession;
 import net.vicp.lylab.utils.operation.KeepAliveValidator;
 
 public class RpcConnector extends NonCloneableBaseObject {
-	//					Server	Procedure
+	//					Server		Procedure
 	protected final Map<String, Set<String>> server2procedure;
 	//					Server		Address
 	protected final Map<String, List<InetAddr>> server2addr;
@@ -83,7 +83,8 @@ public class RpcConnector extends NonCloneableBaseObject {
 			returnConnection(socket);
 			return (Message) p.decode(response);
 		} while (torelent-- > 0);
-		removeServer(request.getServer(), ip);
+//		removeServer(request.getServer(), ip);
+		// TODO fatal report
 		log.fatal("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 		throw new LYException("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 	}
@@ -147,7 +148,7 @@ public class RpcConnector extends NonCloneableBaseObject {
 		}
 	}
 
-	public void addProcedures(String server, Collection<String> procedures) {
+	public void modifyProcedures(String server, Collection<String> procedures) {
 		synchronized (lock) {
 			if (server2addr.containsKey(server)) {
 				Iterator<String> iterator = procedures.iterator();

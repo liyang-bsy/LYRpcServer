@@ -41,6 +41,7 @@
 #----------------------RPC Dispatcher
 *dispatcher=net.vicp.lylab.server.rpc.RPCDispatcherAop
 ^filterChain=&filters
+^actions=&Aop
 
 #----------------------RPC Connector
 *connector=net.vicp.lylab.server.rpc.RpcConnector

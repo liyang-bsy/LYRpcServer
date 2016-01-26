@@ -14,10 +14,17 @@ public class StopAction extends RPCBaseAction {
 	public void exec() {
 		try {
 			do {
+				getResponse().getBody().put("result", "Stop procedure will start in 5 seconds.");
 				getResponse().success();
 				new Task() {
 					@Override
 					public void exec() {
+						try {
+							System.out.println("Stop procedure will start in 5 seconds.");
+							Thread.sleep(5000L);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						ServerRuntime.close();
 					}
 				}.begin("ServerDestroyer");

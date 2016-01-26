@@ -20,7 +20,7 @@ public class RPCDispatcherAop extends SimpleKeyDispatcher<RPCMessage> {
 	@Override
 	protected RPCBaseAction mapAction(RPCMessage request) {
 		try {
-			return (RPCBaseAction) CoreDef.config.getConfig("Aop").getNewInstance(request.getRpcKey() + "Action");
+			return (RPCBaseAction) actions.getNewInstance(request.getRpcKey() + "Action");
 		} catch (Exception e) {
 			return null;
 		}

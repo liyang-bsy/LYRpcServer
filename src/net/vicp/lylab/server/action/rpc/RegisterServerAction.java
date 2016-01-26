@@ -25,7 +25,7 @@ public class RegisterServerAction extends RPCBaseAction {
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
 
 			connector.addServer(server, ip, port);
-			connector.addProcedures(server, procedures);
+			connector.modifyProcedures(server, procedures);
 
 			// No sync, stand alone mode
 			// TODO comunication and sync with other RPC server
