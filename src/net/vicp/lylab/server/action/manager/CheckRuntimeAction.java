@@ -19,4 +19,9 @@ public class CheckRuntimeAction extends RPCBaseAction {
 		}
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

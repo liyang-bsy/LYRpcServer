@@ -23,4 +23,9 @@ public class SwithModificationAction extends RPCBaseAction {
 		return changeable;
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

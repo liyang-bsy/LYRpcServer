@@ -28,4 +28,9 @@ public class RegisterServerAction extends RPCBaseAction {
 		} while (false);
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

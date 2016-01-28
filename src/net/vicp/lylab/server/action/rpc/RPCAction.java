@@ -74,4 +74,9 @@ public class RPCAction extends RPCBaseAction {
 		} while (false);
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

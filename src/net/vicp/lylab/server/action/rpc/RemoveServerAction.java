@@ -34,4 +34,9 @@ public class RemoveServerAction extends BaseAction {
 		} while (false);
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

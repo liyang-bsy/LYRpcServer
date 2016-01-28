@@ -18,4 +18,9 @@ public class SyncServerAction extends BaseAction {
 		} while (false);
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }

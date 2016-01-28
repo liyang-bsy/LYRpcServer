@@ -34,4 +34,9 @@ public class StopAction extends RPCBaseAction {
 		}
 	}
 
+	@Override
+	public boolean foundBadParameter() {
+		return false;
+	}
+
 }
