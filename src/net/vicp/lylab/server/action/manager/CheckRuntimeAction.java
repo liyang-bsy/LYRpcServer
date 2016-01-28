@@ -11,7 +11,7 @@ public class CheckRuntimeAction extends RPCBaseAction {
 	public void exec() {
 		try {
 			do {
-				getResponse().getBody().put("Current time is ", Utils.format(new Date(), "yyyy-MM-dd HH-mm:ss"));
+				getResponse().getBody().put("Current time", Utils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
 				getResponse().success();
 			} while (false);
 		} catch (Exception e) {
