@@ -7,7 +7,7 @@ import net.vicp.lylab.server.dispatcher.SimpleKeyDispatcher;
 import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.utils.Logger;
 
-public class RPCDispatcherAop extends SimpleKeyDispatcher<RPCMessage> {
+public class RPCDispatcher extends SimpleKeyDispatcher<RPCMessage> {
 	@Override
 	protected void logger(RPCMessage request, Message response) {
 //		System.out.println("Access key:" + request.getKey() + "\tAccess rpcKey:" + ((RPCMessage) request).getRpcKey()

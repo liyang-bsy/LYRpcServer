@@ -2,7 +2,7 @@
 !debug=0
 server=LYRpcServer
 
-$Aop=action.txt
+$Actions=action.txt
 
 $Singleton=init.txt
 
@@ -11,10 +11,6 @@ $Singleton=init.txt
 
 *protocol=&LYLabProtocol
 *heartBeat=net.vicp.lylab.core.model.SimpleHeartBeat
-
-#[]protocols=&LYLabProtocol
-#*ProtocolUtils=net.vicp.lylab.utils.internet.protocol.ProtocolUtils
-#^rawProtocols=&protocols
 #---------------------protocol defines---------------------
 
 #---------------------server port

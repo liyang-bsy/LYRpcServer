@@ -1,4 +1,4 @@
-#LYServer
+#LYRpcServer
 
 Release under LGPL license, consult your rights before using.
 
