@@ -7,10 +7,16 @@
 ^expireTime=259200000
 ^threshold=0.9
 
+#---------------------Logger
+*Logger=net.vicp.lylab.server.utils.Logger
+^filePath=D:/RPCServer/record
+^fileSuffix=.log
+
 #---------------------Timer
 *RefreshCache=net.vicp.lylab.utils.cache.RefreshCache
 ^lyCache=&LYCache
 *RemoveOldLog=net.vicp.lylab.server.timer.RemoveOldLog
+^logger=&Logger
 *HeartBeat=net.vicp.lylab.server.timer.HeartBeat
 ^serverName=&server
 
@@ -28,11 +34,6 @@
 *CacheLifeCycle=net.vicp.lylab.utils.cache.CacheLifeCycle
 ^savePath=D:/RPCServer/LYCache
 ^lyCache=&LYCache
-
-#---------------------Logger
-*Logger=net.vicp.lylab.server.utils.Logger
-^filePath=D:/RPCServer/record
-^fileSuffix=.log
 
 #----------------------Filter chain
 *filter1=net.vicp.lylab.server.filter.IPFilter
