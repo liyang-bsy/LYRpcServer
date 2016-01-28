@@ -1,6 +1,6 @@
 package net.vicp.lylab.server.action.manager;
 
-import net.vicp.lylab.core.model.RPCBaseAction;
+import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.utils.Utils;
 
 public class SwithModificationAction extends RPCBaseAction {

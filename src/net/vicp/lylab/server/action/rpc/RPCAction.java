@@ -9,8 +9,8 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.Pair;
-import net.vicp.lylab.core.model.RPCBaseAction;
 import net.vicp.lylab.core.model.RPCMessage;
+import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 import net.vicp.lylab.utils.Utils;
 

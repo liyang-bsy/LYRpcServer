@@ -25,7 +25,7 @@
 *TimeoutController=net.vicp.lylab.utils.controller.TimeoutController
 
 #---------------------Save Cache
-*CacheLifeCycle=net.vicp.lylab.server.utils.CacheLifeCycle
+*CacheLifeCycle=net.vicp.lylab.utils.cache.CacheLifeCycle
 ^savePath=D:/RPCServer/LYCache
 ^lyCache=&LYCache
 

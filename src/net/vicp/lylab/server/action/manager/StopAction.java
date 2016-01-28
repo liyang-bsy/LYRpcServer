@@ -1,7 +1,7 @@
 package net.vicp.lylab.server.action.manager;
 
-import net.vicp.lylab.core.model.RPCBaseAction;
 import net.vicp.lylab.server.ServerRuntime;
+import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.utils.Utils;
 import net.vicp.lylab.utils.atomic.AtomicBoolean;
 import net.vicp.lylab.utils.tq.Task;
