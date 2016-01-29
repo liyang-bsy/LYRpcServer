@@ -22,25 +22,34 @@ public class RDMADirCmdHub extends Task {
 	public static AtomicInteger total = new AtomicInteger(0);
 	protected static final Protocol p = new CacheMessageProtocol();
 
+	String lastL, lastR;
 	public void action() {
 		SyncSession session = pool.accessOne();
 
 		CacheMessage message = new CacheMessage();
 
 		//--------------------------
-		StringBuilder sb = new StringBuilder();
-		for (int j = 0; j < 20; j++)
-			for (int i = 0; i < 100; i++)
-				sb.append("1234567890");
-		Pair<String, byte[]> pair = new Pair<>(Utils.createUUID(), sb.toString().getBytes());
+
+		if(total.get() < 1500000)
+		{
+		Pair<String, byte[]> pair = new Pair<>(lastL = Utils.createUUID(), (lastR = Utils.createUUID()).getBytes());
 		
 		message.setKey("Set");
 		message.setPair(pair);
+		}
+		else
+		{
+			Pair<String, byte[]> pair = new Pair<>(lastL, "".getBytes());
+			message.setKey("Get");
+			message.setPair(pair);
+		}
 		//----------------------------
 		session.send(p.encode(message));
-//		CacheMessage m = (CacheMessage) 
+		CacheMessage m = (CacheMessage) 
 				p.decode(session.receive().getLeft());
 //		System.out.println(m);
+		if(total.get() > 1500000 && new String(m.getPair().getRight()).equals(lastR))
+			System.out.println("error");
 //		System.out.println(Arrays.toString(m.getPair().getRight()));
 		pool.recycle(session);
 	}
@@ -50,10 +59,10 @@ public class RDMADirCmdHub extends Task {
 	public static void main(String[] args) throws InterruptedException {
 //		CoreDef.config.reload("C:/config.txt");
 		AutoCreator<SyncSession> creator = new InstanceCreator<>(SyncSession.class
-				, "10.163.100.87", 2000, p, new SimpleHeartBeat());
+				, "127.0.0.1", 2000, p, new SimpleHeartBeat());
 		pool = new AutoGeneratePool<>(creator);
 //		CoreDef.config.getInteger("thread")
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 50; i++)
 			new RDMADirCmdHub().begin();
 		// 稳定以后才开始进行计算
 		Integer recalcTimeInteger = 0;
