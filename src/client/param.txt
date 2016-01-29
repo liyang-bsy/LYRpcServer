@@ -1,0 +1,69 @@
+LYServer-Inc
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+
+CheckRuntime
+		message.setKey("CheckRuntime");
+
+Stop
+		message.setKey("Stop");
+
+LYCacheServer-SetCache
+		HashMap<Object, Object> data = new HashMap<>();
+		data.put("str", Utils.createUUID());
+		data.put("int", 2);
+
+		message.setKey("SetCache");
+		message.getBody().put("server", "Test");
+		message.getBody().put("module", "rpc_test");
+		message.getBody().put("key", Utils.createUUID());
+		message.getBody().put("data", data);
+
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
+LYServer
+		message.setKey("Inc");
+		message.getBody().put("int", 254);
+		
