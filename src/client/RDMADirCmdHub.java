@@ -48,7 +48,7 @@ public class RDMADirCmdHub extends Task {
 		CacheMessage m = (CacheMessage) 
 				p.decode(session.receive().getLeft());
 //		System.out.println(m);
-		if(total.get() > 1500000 && new String(m.getPair().getRight()).equals(lastR))
+		if(total.get() > 1500000 && !new String(m.getPair().getRight()).equals(lastR))
 			System.out.println("error");
 //		System.out.println(Arrays.toString(m.getPair().getRight()));
 		pool.recycle(session);
@@ -62,7 +62,7 @@ public class RDMADirCmdHub extends Task {
 				, "127.0.0.1", 2000, p, new SimpleHeartBeat());
 		pool = new AutoGeneratePool<>(creator);
 //		CoreDef.config.getInteger("thread")
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 4; i++)
 			new RDMADirCmdHub().begin();
 		// 稳定以后才开始进行计算
 		Integer recalcTimeInteger = 0;
