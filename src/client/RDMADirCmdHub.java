@@ -9,6 +9,7 @@ import net.vicp.lylab.core.model.SimpleHeartBeat;
 import net.vicp.lylab.core.pool.AutoGeneratePool;
 import net.vicp.lylab.utils.Utils;
 import net.vicp.lylab.utils.atomic.AtomicInteger;
+import net.vicp.lylab.utils.atomic.AtomicLong;
 import net.vicp.lylab.utils.creator.AutoCreator;
 import net.vicp.lylab.utils.creator.InstanceCreator;
 import net.vicp.lylab.utils.internet.SyncSession;
@@ -19,7 +20,7 @@ public class RDMADirCmdHub extends Task {
 	private static final long serialVersionUID = -1319408007756814179L;
 
 	public static AtomicInteger access = new AtomicInteger(0);
-	public static AtomicInteger total = new AtomicInteger(0);
+	public static AtomicLong total = new AtomicLong(0);
 	protected static final Protocol p = new CacheMessageProtocol();
 
 	String lastL, lastR;
@@ -30,7 +31,7 @@ public class RDMADirCmdHub extends Task {
 
 		//--------------------------
 
-		if(total.get() < 1500000)
+		if(total.get() < 700000)
 		{
 		Pair<String, byte[]> pair = new Pair<>(lastL = Utils.createUUID(), (lastR = Utils.createUUID()).getBytes());
 		
@@ -48,8 +49,8 @@ public class RDMADirCmdHub extends Task {
 		CacheMessage m = (CacheMessage) 
 				p.decode(session.receive().getLeft());
 //		System.out.println(m);
-		if(total.get() > 1500000 && !new String(m.getPair().getRight()).equals(lastR))
-			System.out.println("error");
+		if(message.getKey().equals("Get") && !new String(m.getPair().getRight()).equals(lastR))
+			System.out.println("error:\n" + lastR + "\n" + new String(m.getPair().getRight()));
 //		System.out.println(Arrays.toString(m.getPair().getRight()));
 		pool.recycle(session);
 	}
@@ -75,7 +76,7 @@ public class RDMADirCmdHub extends Task {
 			if (recalc && j > 8) {
 				recalcTimeInteger = j;
 				recalc = false;
-				total.set(0);
+				total.set(0L);
 				System.out.println("recalc");
 			}
 			System.out.println("second:" + j + "\t\ttotal:" + total.get() + "\t\taverage:"
