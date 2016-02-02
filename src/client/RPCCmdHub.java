@@ -6,8 +6,8 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.model.SimpleHeartBeat;
 import net.vicp.lylab.utils.atomic.AtomicInteger;
+import net.vicp.lylab.utils.client.RPCClient;
 import net.vicp.lylab.utils.internet.protocol.LYLabProtocol;
-import net.vicp.lylab.utils.rpc.client.RPCaller;
 import net.vicp.lylab.utils.tq.Task;
 
 public class RPCCmdHub extends Task {
@@ -26,12 +26,12 @@ public class RPCCmdHub extends Task {
 		caller.call(rpcMessage);
 	}
 
-	static RPCaller caller;
+	static RPCClient caller;
 
 	public static void main(String[] args) throws InterruptedException {
 		CoreDef.config.reload("C:/config.txt");
 		
-		caller = new RPCaller();
+		caller = new RPCClient();
 		caller.setProtocol(new LYLabProtocol());
 //		caller.setRpcHost("127.0.0.1");
 		caller.setRpcHost(CoreDef.config.getString("rpcHost"));
