@@ -3,6 +3,7 @@ package client;
 import java.text.DecimalFormat;
 
 import net.vicp.lylab.core.CoreDef;
+import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.model.SimpleHeartBeat;
 import net.vicp.lylab.utils.atomic.AtomicInteger;
@@ -23,24 +24,26 @@ public class RPCCmdHub extends Task {
 		rpcMessage.setKey("Inc");
 		rpcMessage.setServer("LYServer");
 		rpcMessage.getBody().put("int", 254);
-		caller.call(rpcMessage);
+		Message m = caller.call(rpcMessage);
+		if((Integer)m.getBody().get("int") != 255)
+			System.out.println("err");
 	}
 
 	static RPCClient caller;
 
 	public static void main(String[] args) throws InterruptedException {
-		CoreDef.config.reload("C:/config.txt");
+//		CoreDef.config.reload("C:/config.txt");
 		
 		caller = new RPCClient();
 		caller.setProtocol(new LYLabProtocol());
 //		caller.setRpcHost("127.0.0.1");
-		caller.setRpcHost(CoreDef.config.getString("rpcHost"));
+		caller.setRpcHost("127.0.0.1");//CoreDef.config.getString("rpcHost"));
 		caller.setRpcPort(2001);
 		caller.setHeartBeat(new SimpleHeartBeat());
 		caller.setBackgroundServer(false);
 		caller.initialize();
-
-		for (int i = 0; i < CoreDef.config.getInteger("thread"); i++)
+//		CoreDef.config.getInteger("thread")
+		for (int i = 0; i < 4; i++)
 			new RPCCmdHub().begin();
 		// 稳定以后才开始进行计算
 		Integer recalcTimeInteger = 0;
