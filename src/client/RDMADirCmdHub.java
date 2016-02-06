@@ -35,13 +35,13 @@ public class RDMADirCmdHub extends Task {
 		{
 		Pair<String, byte[]> pair = new Pair<>(lastL = Utils.createUUID(), (lastR = Utils.createUUID()).getBytes());
 		
-		message.setKey("Set");
+		message.setAction("Set");
 		message.setPair(pair);
 		}
 		else
 		{
 			Pair<String, byte[]> pair = new Pair<>(lastL, "".getBytes());
-			message.setKey("Get");
+			message.setAction("Get");
 			message.setPair(pair);
 		}
 		//----------------------------
@@ -49,7 +49,7 @@ public class RDMADirCmdHub extends Task {
 		CacheMessage m = (CacheMessage) 
 				p.decode(session.receive().getLeft());
 //		System.out.println(m);
-		if(message.getKey().equals("Get") && !new String(m.getPair().getRight()).equals(lastR))
+		if(message.getAction().equals("Get") && !new String(m.getPair().getRight()).equals(lastR))
 			System.out.println("error:\n" + lastR + "\n" + new String(m.getPair().getRight()));
 //		System.out.println(Arrays.toString(m.getPair().getRight()));
 		pool.recycle(session);

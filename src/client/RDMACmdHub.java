@@ -21,7 +21,7 @@ public class RDMACmdHub {
 		//--------------------------
 		Pair<String, byte[]> pair = new Pair<>("1",new byte[0]);
 		
-		message.setKey("Get");
+		message.setAction("Get");
 		message.setPair(pair);
 		//----------------------------
 
