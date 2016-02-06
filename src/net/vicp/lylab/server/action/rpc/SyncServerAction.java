@@ -1,10 +1,10 @@
 package net.vicp.lylab.server.action.rpc;
 
-import net.vicp.lylab.core.BaseAction;
 import net.vicp.lylab.core.CoreDef;
+import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 
-public class SyncServerAction extends BaseAction {
+public class SyncServerAction extends RPCBaseAction {
 
 	@Override
 	public void exec() {

@@ -22,6 +22,7 @@ public class RPCDispatcher extends SimpleKeyDispatcher<RPCMessage> {
 		try {
 			return (RPCBaseAction) actions.getNewInstance(request.getRpcKey() + "Action");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

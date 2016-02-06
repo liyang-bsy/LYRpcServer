@@ -15,8 +15,8 @@ public class RegisterServerAction extends RPCBaseAction {
 				break;
 			}
 			String ip = clientSocket.getInetAddress().getHostAddress();
-			String server = (String) getRequest().getBody().get("server");
 			Integer port = (Integer) getRequest().getBody().get("port");
+			String server = (String) getRequest().getBody().get("server");
 
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
 

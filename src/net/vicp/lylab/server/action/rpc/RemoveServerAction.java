@@ -2,23 +2,23 @@ package net.vicp.lylab.server.action.rpc;
 
 import java.util.List;
 
-import net.vicp.lylab.core.BaseAction;
 import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.server.action.manager.SwithModificationAction;
+import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 
-public class RemoveServerAction extends BaseAction {
+public class RemoveServerAction extends RPCBaseAction {
 
 	@Override
 	public void exec() {
 		do {
-			if (SwithModificationAction.isChangeable()) {
+			if (!SwithModificationAction.isChangeable()) {
 				getResponse().fail("Current mode is unchangeable");
 				break;
 			}
 			String ip = clientSocket.getInetAddress().getHostAddress();
-			int port = clientSocket.getLocalPort();
+			Integer port = (Integer) getRequest().getBody().get("port");
 			String server = (String) getRequest().getBody().get("server");
 
 			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
