@@ -61,6 +61,7 @@ public class DirCmdHub extends Task {
 
 		session.send(p.encode(message));
 		m = (Message) p.decode(session.receive().getLeft());
+		@SuppressWarnings("rawtypes")
 		String value = (String) ((Map) m.getBody().get("data")).get("str");
 		if(!value.equals(dataStr))
 			System.out.println("bad exists");

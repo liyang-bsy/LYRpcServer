@@ -2,7 +2,6 @@ package client;
 
 import java.text.DecimalFormat;
 
-import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.model.SimpleHeartBeat;

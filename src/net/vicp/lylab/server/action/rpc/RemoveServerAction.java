@@ -28,7 +28,7 @@ public class RemoveServerAction extends RPCBaseAction {
 				getResponse().fail("Background server can only remove itself");
 				break;
 			}
-			connector.removeServer(server, ip);
+			connector.syncRemoveServer(server, ip, port);
 
 			getResponse().success();
 		} while (false);

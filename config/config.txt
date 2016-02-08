@@ -14,6 +14,6 @@ $Singleton=init.txt
 #---------------------protocol defines---------------------
 
 #---------------------server port
-port=2001
+port=2002
 
 ipWhiteList=127.0.0.1

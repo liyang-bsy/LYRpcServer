@@ -30,8 +30,15 @@
 ^filterChain=&filters
 ^actions=&Actions
 
+#----------------------RDMA Client
+*RDMAClient=net.vicp.lylab.utils.client.RDMAClient
+^rdmaHost=127.0.0.1
+^rdmaPort=2000
+^heartBeat=&heartBeat
+
 #----------------------RPC Connector
 *connector=net.vicp.lylab.server.rpc.RpcConnector
+^rdmaClient=&RDMAClient
 
 #----------------------Sync Server
 #*SyncServer=net.vicp.lylab.server.runtime.SyncServer

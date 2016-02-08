@@ -7,20 +7,18 @@ import net.vicp.lylab.server.rpc.RpcConnector;
 public class SyncServerAction extends RPCBaseAction {
 
 	@Override
-	public void exec() {
-		do {
-			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
-			if (!connector.sync()) {
-				getResponse().fail("Sync failed, check log for detail.");
-				break;
-			}
-			getResponse().success();
-		} while (false);
+	public boolean foundBadParameter() {
+		return false;
 	}
 
 	@Override
-	public boolean foundBadParameter() {
-		return false;
+	public void exec() {
+		do {
+			RpcConnector connector = (RpcConnector) CoreDef.config.getConfig("Singleton").getObject("connector");
+			connector.sync();
+
+			getResponse().success();
+		} while (false);
 	}
 
 }
