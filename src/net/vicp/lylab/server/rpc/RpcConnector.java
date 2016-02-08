@@ -51,23 +51,27 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 
 	// Optimistic Locking
 	public void syncAddServer(String server, String ip, int port) {
-		while (true) {
-			Map<String, List<InetAddr>> server2addr = syncGet();
-			addServer(server, ip, port);
-			if (!syncSet(server2addr))
-				continue;
-			break;
+		synchronized (lock) {
+			while (true) {
+				Map<String, List<InetAddr>> server2addr = syncGet();
+				addServer(server, ip, port);
+				if (!syncSet(server2addr))
+					continue;
+				break;
+			}
 		}
 	}
 
 	// Optimistic Locking
 	public void syncRemoveServer(String server, String ip, int port) {
-		while (true) {
-			Map<String, List<InetAddr>> server2addr = syncGet();
-			removeServer(server, ip, port);
-			if (!syncSet(server2addr))
-				continue;
-			break;
+		synchronized (lock) {
+			while (true) {
+				Map<String, List<InetAddr>> server2addr = syncGet();
+				removeServer(server, ip, port);
+				if (!syncSet(server2addr))
+					continue;
+				break;
+			}
 		}
 	}
 
@@ -77,45 +81,49 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 	
 	@SuppressWarnings("unchecked")
 	private Map<String, List<InetAddr>> syncGet() {
-		try {
-			byte[] data = rdmaClient.get("RPCBackgroundServerMap_" + "server2addr");
-			RpcConnector tempConnector = new RpcConnector();
-			String json = new String(data, CoreDef.CHARSET());
-			if(StringUtils.isBlank(json))
-				return null;
-			Map<String, Object> map = Utils.deserialize(HashMap.class, json);
-			
-			for (String server : map.keySet()) {
-				List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) map.get(server);
-				for (HashMap<String, Object> item : items)
-					tempConnector.addServer(server, (String) item.get("ip"), (int) item.get("port"));
+		synchronized (lock) {
+			try {
+				byte[] data = rdmaClient.get("RPCBackgroundServerMap_" + "server2addr");
+				RpcConnector tempConnector = new RpcConnector();
+				String json = new String(data, CoreDef.CHARSET());
+				if (StringUtils.isBlank(json))
+					return null;
+				Map<String, Object> map = Utils.deserialize(HashMap.class, json);
+
+				for (String server : map.keySet()) {
+					List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) map.get(server);
+					for (HashMap<String, Object> item : items)
+						tempConnector.addServer(server, (String) item.get("ip"), (int) item.get("port"));
+				}
+				Map<String, List<InetAddr>> temp = this.server2addr;
+				Map<InetAddr, AutoGeneratePool<SyncSession>> tempPool = this.addr2ConnectionPool;
+				this.server2addr = tempConnector.server2addr;
+				this.addr2ConnectionPool = tempConnector.addr2ConnectionPool;
+
+				Set<Entry<InetAddr, AutoGeneratePool<SyncSession>>> entries = tempPool.entrySet();
+				for (Entry<InetAddr, AutoGeneratePool<SyncSession>> entry : entries)
+					Utils.tryClose(entry.getValue());
+				tempPool.clear();
+
+				return temp;
+			} catch (Exception e) {
+				throw new LYException("Data in cache is corrupted, unable to fetch last data!", e);
 			}
-			Map<String, List<InetAddr>> temp = this.server2addr;
-			Map<InetAddr, AutoGeneratePool<SyncSession>> tempPool = this.addr2ConnectionPool;
-			this.server2addr = tempConnector.server2addr;
-			this.addr2ConnectionPool = tempConnector.addr2ConnectionPool;
-			
-			Set<Entry<InetAddr, AutoGeneratePool<SyncSession>>> entries = tempPool.entrySet();
-			for(Entry<InetAddr, AutoGeneratePool<SyncSession>> entry:entries)
-				Utils.tryClose(entry.getValue());
-			tempPool.clear();	
-			
-			return temp;
-		} catch (Exception e) {
-			throw new LYException("Data in cache is corrupted, unable to fetch last data!", e);
 		}
 	}
-	
+
 	private boolean syncSet(Map<String, List<InetAddr>> server2addr_cmp) {
-		try {
-			byte[] cmpData = server2addr_cmp == null ? new byte[0]
-					: Utils.serialize(server2addr_cmp).getBytes(CoreDef.CHARSET());
-			byte[] data = Utils.serialize(server2addr).getBytes(CoreDef.CHARSET());
-			if (rdmaClient.compareAndSet("RPCBackgroundServerMap_" + "server2addr", data, cmpData) != 0)
-				return false;
-			return true;
-		} catch (Exception e) {
-			throw new LYException("Compare and set newest server to addr map failed with exception", e);
+		synchronized (lock) {
+			try {
+				byte[] cmpData = server2addr_cmp == null ? new byte[0]
+						: Utils.serialize(server2addr_cmp).getBytes(CoreDef.CHARSET());
+				byte[] data = Utils.serialize(server2addr).getBytes(CoreDef.CHARSET());
+				if (rdmaClient.compareAndSet("RPCBackgroundServerMap_" + "server2addr", data, cmpData) != 0)
+					return false;
+				return true;
+			} catch (Exception e) {
+				throw new LYException("Compare and set newest server to addr map failed with exception", e);
+			}
 		}
 	}
 

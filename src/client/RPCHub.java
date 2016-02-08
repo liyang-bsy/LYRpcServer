@@ -21,9 +21,16 @@ public class RPCHub {
 
 		RPCMessage rpcMessage = new RPCMessage();
 
+//		rpcMessage = new RPCMessage();
+//		rpcMessage.setRpcKey("SyncServer");
+//		System.out.println(caller.callRpcServer(rpcMessage));
+		
+
 		rpcMessage = new RPCMessage();
-		rpcMessage.setRpcKey("SyncServer");
-		System.out.println(caller.callRpcServer(rpcMessage));
+		rpcMessage.setKey("SetCache");
+		rpcMessage.setServer("公共缓存服务");
+		rpcMessage.getBody().put("int", 254);
+		System.out.println(caller.call(rpcMessage,true));
 		
 		caller.close();
 	}
