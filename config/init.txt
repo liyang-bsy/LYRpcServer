@@ -52,6 +52,7 @@
 *AsyncServer=net.vicp.lylab.server.runtime.AsyncServer
 ^taskQueue=&LYTaskQueue
 ^port=&port
+^maxHandlerSize=500
 ^dispatcher=&dispatcher
 ^protocol=&protocol
 ^heartBeat=&heartBeat
