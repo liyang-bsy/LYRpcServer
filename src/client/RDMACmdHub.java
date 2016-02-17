@@ -19,7 +19,7 @@ public class RDMACmdHub {
 		CacheMessage message = new CacheMessage();
 
 		//--------------------------
-		Pair<String, byte[]> pair = new Pair<>("1",new byte[0]);
+		Pair<String, byte[]> pair = new Pair<>("RPCBackgroundServerMap_server2addr",new byte[0]);
 		
 		message.setAction("Get");
 		message.setPair(pair);
@@ -29,6 +29,7 @@ public class RDMACmdHub {
 		CacheMessage m = (CacheMessage) p.decode(session.receive().getLeft());
 		System.out.println(m);
 		System.out.println(Arrays.toString(m.getPair().getRight()));
+		System.out.println(new String(m.getPair().getRight()));
 		session.close();
 	}
 

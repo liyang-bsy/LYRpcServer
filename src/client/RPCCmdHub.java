@@ -19,20 +19,15 @@ public class RPCCmdHub extends Task {
 	public static AtomicInteger accessE = new AtomicInteger(0);
 	public static AtomicInteger total = new AtomicInteger(0);
 
-	public boolean action() {
-		RPCMessage rpcMessage = new RPCMessage();
-
-		rpcMessage = new RPCMessage();
+	public Message action(RPCMessage rpcMessage) {
 		rpcMessage.setKey("Inc");
 		rpcMessage.setServer("LYServer");
 		rpcMessage.getBody().put("int", 254);
 		Message m = caller.call(rpcMessage);
-		if((Integer)m.getBody().get("int") != 255)
-		{
-			System.out.println(m);
-			return false;
+		if ((Integer) m.getBody().get("int") != 255) {
+			return null;
 		}
-		return true;
+		return m;
 	}
 
 	static RPCClient caller;
@@ -49,8 +44,10 @@ public class RPCCmdHub extends Task {
 		caller.setBackgroundServer(false);
 		caller.initialize();
 //		CoreDef.config.getInteger("thread")
-		for (int i = 0; i < CoreDef.config.getInteger("thread"); i++)
+		for (int i = 0; i < CoreDef.config.getInteger("thread"); i++) {
+			Thread.sleep(CoreDef.config.getInteger("sleep"));
 			new RPCCmdHub().begin();
+		}
 		// 稳定以后才开始进行计算
 		Integer recalcTimeInteger = 0;
 		boolean recalc = true;
@@ -75,9 +72,16 @@ public class RPCCmdHub extends Task {
 
 	@Override
 	public void exec() {
+		Message m = null;
 		while (!isStopped()) {
 			try {
-				if (action())
+				Thread.sleep(CoreDef.config.getInteger("sleep"));
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				m = action(new RPCMessage());
+				if (m != null)
 					access.incrementAndGet();
 				else
 					accessF.incrementAndGet();
