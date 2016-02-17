@@ -2,6 +2,7 @@ package client;
 
 import java.text.DecimalFormat;
 
+import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.model.SimpleHeartBeat;
@@ -14,9 +15,11 @@ public class RPCCmdHub extends Task {
 	private static final long serialVersionUID = -1319408007756814179L;
 
 	public static AtomicInteger access = new AtomicInteger(0);
+	public static AtomicInteger accessF = new AtomicInteger(0);
+	public static AtomicInteger accessE = new AtomicInteger(0);
 	public static AtomicInteger total = new AtomicInteger(0);
 
-	public void action() {
+	public boolean action() {
 		RPCMessage rpcMessage = new RPCMessage();
 
 		rpcMessage = new RPCMessage();
@@ -25,24 +28,28 @@ public class RPCCmdHub extends Task {
 		rpcMessage.getBody().put("int", 254);
 		Message m = caller.call(rpcMessage);
 		if((Integer)m.getBody().get("int") != 255)
-			System.out.println("err");
+		{
+			System.out.println(m);
+			return false;
+		}
+		return true;
 	}
 
 	static RPCClient caller;
 
 	public static void main(String[] args) throws InterruptedException {
-//		CoreDef.config.reload("C:/config.txt");
+		CoreDef.config.reload("C:/config.txt");
 		
 		caller = new RPCClient();
 		caller.setProtocol(new LYLabProtocol());
 //		caller.setRpcHost("127.0.0.1");
-		caller.setRpcHost("127.0.0.1");//CoreDef.config.getString("rpcHost"));
+		caller.setRpcHost(CoreDef.config.getString("rpcHost"));
 		caller.setRpcPort(2001);
 		caller.setHeartBeat(new SimpleHeartBeat());
 		caller.setBackgroundServer(false);
 		caller.initialize();
 //		CoreDef.config.getInteger("thread")
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < CoreDef.config.getInteger("thread"); i++)
 			new RPCCmdHub().begin();
 		// 稳定以后才开始进行计算
 		Integer recalcTimeInteger = 0;
@@ -50,6 +57,8 @@ public class RPCCmdHub extends Task {
 
 		for (int j = 0; j < Integer.MAX_VALUE; j += 1) {
 			access.set(0);
+			accessF.set(0);
+			accessE.set(0);
 			Thread.sleep(1000);
 
 			if (recalc && j > 8) {
@@ -60,7 +69,7 @@ public class RPCCmdHub extends Task {
 			}
 			System.out.println("second:" + j + "\t\ttotal:" + total.get() + "\t\taverage:"
 					+ new DecimalFormat("0.00").format(1.0 * total.get() / (j - recalcTimeInteger)));
-			System.out.println("access:" + access.get());
+			System.out.println("access:" + access.get() + "\taccessF:" + accessF.get() + "\taccessE:" + accessE.get());
 		}
 	}
 
@@ -68,10 +77,13 @@ public class RPCCmdHub extends Task {
 	public void exec() {
 		while (!isStopped()) {
 			try {
-				action();
+				if (action())
+					access.incrementAndGet();
+				else
+					accessF.incrementAndGet();
 			} catch (Throwable e) {
+				accessE.incrementAndGet();
 			}
-			access.incrementAndGet();
 			total.incrementAndGet();
 		}
 	}
