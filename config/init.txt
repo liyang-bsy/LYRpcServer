@@ -11,9 +11,11 @@
 ^logger=&Logger
 *HeartBeat=net.vicp.lylab.server.timer.HeartBeat
 ^serverName=&server
+*UpdateServerAddrMap=net.vicp.lylab.server.timer.UpdateServerAddrMap
 
 []timerJobs=&HeartBeat
 []timerJobs=&RemoveOldLog
+[]timerJobs=&UpdateServerAddrMap
 
 *LYTimer=net.vicp.lylab.utils.timer.LYTimer
 ^jobs=&timerJobs

@@ -7,6 +7,7 @@ import net.vicp.lylab.core.model.InetAddr;
 import net.vicp.lylab.server.action.manager.SwithModificationAction;
 import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
+import net.vicp.lylab.utils.Utils;
 
 public class RemoveServerAction extends RPCBaseAction {
 
@@ -30,6 +31,7 @@ public class RemoveServerAction extends RPCBaseAction {
 			}
 			connector.syncRemoveServer(server, ip, port);
 
+			System.out.println(Utils.getPeer(clientSocket) + " requested RemoveServerAction");
 			getResponse().success();
 		} while (false);
 	}

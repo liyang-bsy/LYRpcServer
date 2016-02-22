@@ -4,6 +4,7 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.server.action.manager.SwithModificationAction;
 import net.vicp.lylab.server.model.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
+import net.vicp.lylab.utils.Utils;
 
 public class RegisterServerAction extends RPCBaseAction {
 
@@ -22,6 +23,7 @@ public class RegisterServerAction extends RPCBaseAction {
 
 			connector.syncAddServer(server, ip, port);
 
+			System.out.println(Utils.getPeer(clientSocket) + " requested RegisterServerAction");
 			getResponse().success();
 		} while (false);
 	}

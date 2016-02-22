@@ -232,4 +232,8 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 		this.rdmaClient = rdmaClient;
 	}
 
+	public Map<String, List<InetAddr>> getServerAddrMap() {
+		return server2addr;
+	}
+
 }
