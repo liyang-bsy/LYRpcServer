@@ -164,8 +164,9 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 				returnConnection(socket, true);
 				continue;
 			}
+			Message msg = (Message) p.decode(response);
 			returnConnection(socket);
-			return (Message) p.decode(response);
+			return msg;
 		} while (torelent-- > 0);
 //		removeServer(request.getServer(), ip);
 		// TODO fatal report
