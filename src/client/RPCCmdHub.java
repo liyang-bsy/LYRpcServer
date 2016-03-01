@@ -6,6 +6,7 @@ import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.Message;
 import net.vicp.lylab.core.model.RPCMessage;
 import net.vicp.lylab.core.model.SimpleHeartBeat;
+import net.vicp.lylab.utils.Utils;
 import net.vicp.lylab.utils.atomic.AtomicLong;
 import net.vicp.lylab.utils.client.RPCClient;
 import net.vicp.lylab.utils.internet.protocol.LYLabProtocol;
@@ -97,6 +98,7 @@ public class RPCCmdHub extends Task {
 					totalF.incrementAndGet();
 				}
 			} catch (Throwable e) {
+				log.error(Utils.getStringFromThrowable(e));
 				accessE.incrementAndGet();
 				totalE.incrementAndGet();
 			}
