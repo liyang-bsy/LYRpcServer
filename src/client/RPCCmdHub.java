@@ -23,8 +23,9 @@ public class RPCCmdHub extends Task {
 	public static AtomicLong totalE = new AtomicLong(0);
 
 	public Message action(RPCMessage rpcMessage) {
-		rpcMessage.setKey("Inc");
 		rpcMessage.setServer("LYServer");
+		
+		rpcMessage.setKey("Inc");
 		rpcMessage.getBody().put("int", 254);
 		Message m = caller.call(rpcMessage);
 		if ((Integer) m.getBody().get("int") != 255) {
