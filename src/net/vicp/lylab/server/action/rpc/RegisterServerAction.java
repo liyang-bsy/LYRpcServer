@@ -23,7 +23,7 @@ public class RegisterServerAction extends RPCBaseAction {
 
 			connector.syncAddServer(server, ip, port);
 
-			System.out.println(Utils.getPeer(clientSocket) + " requested RegisterServerAction");
+			System.out.println(Utils.getPeer(clientSocket) + " requested RegisterServerAction as [" + server + "]");
 			getResponse().success();
 		} while (false);
 	}
