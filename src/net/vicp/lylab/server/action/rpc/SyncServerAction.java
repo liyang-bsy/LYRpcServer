@@ -1,7 +1,7 @@
 package net.vicp.lylab.server.action.rpc;
 
 import net.vicp.lylab.core.CoreDef;
-import net.vicp.lylab.server.model.RPCBaseAction;
+import net.vicp.lylab.server.core.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 import net.vicp.lylab.utils.Utils;
 

@@ -3,11 +3,11 @@ package net.vicp.lylab.server.action.manager;
 import java.util.Date;
 
 import net.vicp.lylab.core.CoreDef;
-import net.vicp.lylab.server.model.RPCBaseAction;
+import net.vicp.lylab.server.core.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 import net.vicp.lylab.utils.Utils;
 
-public class CheckRuntimeAction extends RPCBaseAction {
+public class StatusAction extends RPCBaseAction {
 
 	@Override
 	public void exec() {

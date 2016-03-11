@@ -4,8 +4,8 @@ import java.util.List;
 
 import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.model.InetAddr;
-import net.vicp.lylab.server.action.manager.SwithModificationAction;
-import net.vicp.lylab.server.model.RPCBaseAction;
+import net.vicp.lylab.server.action.manager.LockAction;
+import net.vicp.lylab.server.core.RPCBaseAction;
 import net.vicp.lylab.server.rpc.RpcConnector;
 import net.vicp.lylab.utils.Utils;
 
@@ -14,8 +14,8 @@ public class RemoveServerAction extends RPCBaseAction {
 	@Override
 	public void exec() {
 		do {
-			if (!SwithModificationAction.isChangeable()) {
-				getResponse().fail("Current mode is unchangeable");
+			if (!LockAction.isChangeable()) {
+				getResponse().fail(0x00010002, "Current mode is unchangeable");
 				break;
 			}
 			String ip = clientSocket.getInetAddress().getHostAddress();

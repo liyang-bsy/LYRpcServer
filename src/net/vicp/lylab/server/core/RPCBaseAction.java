@@ -1,4 +1,4 @@
-package net.vicp.lylab.server.model;
+package net.vicp.lylab.server.core;
 
 import net.vicp.lylab.core.BaseAction;
 import net.vicp.lylab.core.model.RPCMessage;

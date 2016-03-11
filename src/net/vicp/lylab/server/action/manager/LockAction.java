@@ -1,9 +1,9 @@
 package net.vicp.lylab.server.action.manager;
 
-import net.vicp.lylab.server.model.RPCBaseAction;
+import net.vicp.lylab.server.core.RPCBaseAction;
 import net.vicp.lylab.utils.Utils;
 
-public class SwithModificationAction extends RPCBaseAction {
+public class LockAction extends RPCBaseAction {
 	protected static boolean changeable = true;
 
 	@Override
