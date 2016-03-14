@@ -1,6 +1,6 @@
-PrivilegeStatusAction=net.vicp.lylab.server.action.manager.StatusAction
-PrivilegeStopAction=net.vicp.lylab.server.action.manager.StopAction
+StatusAction=net.vicp.lylab.server.action.manager.StatusAction
 
+PrivilegeStopAction=net.vicp.lylab.server.action.manager.StopAction
 PrivilegeLockAction=net.vicp.lylab.server.action.manager.LockAction
 
 RPCAction=net.vicp.lylab.server.action.rpc.RPCAction
