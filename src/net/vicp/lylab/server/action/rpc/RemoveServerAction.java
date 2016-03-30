@@ -31,7 +31,7 @@ public class RemoveServerAction extends RPCBaseAction {
 			}
 			connector.syncRemoveServer(server, ip, port);
 
-			System.out.println(Utils.getPeer(clientSocket) + " requested RemoveServerAction from [" + server + "]");
+			System.out.println(Utils.getPeer(clientSocket) + " requested RemoveServerAction from [" + server + "," + ip + ":" + port + "]");
 			getResponse().success();
 		} while (false);
 	}
