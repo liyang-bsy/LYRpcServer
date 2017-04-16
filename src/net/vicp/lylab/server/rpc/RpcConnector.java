@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.vicp.lylab.core.CoreDef;
 import net.vicp.lylab.core.NonCloneableBaseObject;
 import net.vicp.lylab.core.exceptions.LYException;
@@ -26,6 +24,8 @@ import net.vicp.lylab.utils.creator.AutoCreator;
 import net.vicp.lylab.utils.creator.InstanceCreator;
 import net.vicp.lylab.utils.internet.SyncSession;
 import net.vicp.lylab.utils.operation.KeepAliveValidator;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class RpcConnector extends NonCloneableBaseObject implements Initializable {
 	//					Server		Address
@@ -170,7 +170,7 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 		} while (torelent-- > 0);
 //		removeServer(request.getServer(), ip);
 		// TODO fatal report
-		log.fatal("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
+		log.error("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 		throw new LYException("Maximun torelent is reached, socket request failed, server[" + request.getServer() + "] on " + ip + " is down.");
 	}
 
