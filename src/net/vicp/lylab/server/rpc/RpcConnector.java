@@ -1,7 +1,6 @@
 package net.vicp.lylab.server.rpc;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,11 +87,11 @@ public class RpcConnector extends NonCloneableBaseObject implements Initializabl
 				String json = new String(data, CoreDef.CHARSET());
 				if (StringUtils.isBlank(json))
 					return null;
-				Map<String, Object> map = Utils.deserialize(HashMap.class, json);
+				Map<String, Object> map = Utils.deserialize(Map.class, json);
 
 				for (String server : map.keySet()) {
-					List<HashMap<String, Object>> items = (List<HashMap<String, Object>>) map.get(server);
-					for (HashMap<String, Object> item : items)
+					List<Map<String, Object>> items = (List<Map<String, Object>>) map.get(server);
+					for (Map<String, Object> item : items)
 						tempConnector.addServer(server, (String) item.get("ip"), (int) item.get("port"));
 				}
 				Map<String, List<InetAddr>> temp = this.server2addr;
